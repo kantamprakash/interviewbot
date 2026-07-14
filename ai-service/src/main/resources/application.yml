@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: ai-interview-service
+
+  ai:
+    ollama:
+      base-url: ${OLLAMA_URL:http://localhost:11434}
+      chat:
+        options:
+          model: ${OLLAMA_MODEL:mistral-nemo}
+          temperature: 0.7
+
+server:
+  port: 8302
+  servlet:
+    context-path: /
+
+logging:
+  level:
+    root: INFO
+    com.ai.service: DEBUG
+    org.springframework.ai: DEBUG
