@@ -30,6 +30,10 @@ coverage/
 # H2 database files (in-memory in dev, but ignore if ever persisted)
 *.mv.db
 *.trace.db
+*.lock.db
+
+# Candidate interview recordings
+portal-backend/data/recordings/
 
 # IDE
 .idea/

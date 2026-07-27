@@ -3,18 +3,18 @@
   flex-direction: column;
   height: 100%;
   width: 100%;
-  background: #f8f9fa;
+  background: #f8fafc;
 }
 
 .dashboard header {
   background: white;
-  color: #1a1f36;
+  color: #1e293b;
   padding: 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  border-bottom: 1px solid #e8eaed;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .dashboard header h1 {
@@ -29,7 +29,7 @@
 }
 
 .btn-admin {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #14b8a6 0%, #0f766e 100%);
   color: white;
   border: none;
   padding: 10px 24px;
@@ -38,12 +38,12 @@
   font-weight: 600;
   font-size: 0.95rem;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 2px 8px rgba(20, 184, 166, 0.3);
 }
 
 .btn-admin:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(20, 184, 166, 0.4);
 }
 
 .dashboard main {
@@ -70,7 +70,7 @@
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e8eaed;
+  border: 1px solid #e2e8f0;
   transition: all 0.3s ease;
 }
 
@@ -82,7 +82,7 @@
 .stat-card h3 {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #7a8396;
+  color: #64748b;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0 0 0.8rem;
@@ -91,7 +91,7 @@
 .stat-card .value {
   font-size: 2rem;
   font-weight: 700;
-  color: #667eea;
+  color: #14b8a6;
   margin: 0;
 }
 
@@ -107,7 +107,7 @@
   border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e8eaed;
+  border: 1px solid #e2e8f0;
   transition: all 0.3s ease;
   text-align: center;
   display: flex;
@@ -127,19 +127,19 @@
 .interview-card h3 {
   font-size: 1.2rem;
   font-weight: 600;
-  color: #1a1f36;
+  color: #1e293b;
   margin: 0;
 }
 
 .interview-card p {
-  color: #7a8396;
+  color: #64748b;
   font-size: 0.95rem;
   margin: 0;
   line-height: 1.5;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #14b8a6 0%, #0f766e 100%);
   color: white;
   border: none;
   padding: 12px 24px;
@@ -148,13 +148,13 @@
   font-weight: 600;
   font-size: 0.95rem;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 2px 8px rgba(20, 184, 166, 0.3);
   width: 100%;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(20, 184, 166, 0.4);
 }
 
 /* Interview Config */
@@ -163,7 +163,7 @@
   border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 2px solid #667eea;
+  border: 2px solid #14b8a6;
   max-width: 500px;
   margin: 0 auto;
   animation: slideUp 0.3s ease;
@@ -183,7 +183,7 @@
 .interview-config h3 {
   font-size: 1.3rem;
   font-weight: 600;
-  color: #1a1f36;
+  color: #1e293b;
   margin: 0 0 1.5rem;
   text-align: center;
 }
@@ -197,14 +197,14 @@
 .config-group label {
   font-weight: 600;
   margin-bottom: 0.6rem;
-  color: #1a1f36;
+  color: #1e293b;
   font-size: 0.95rem;
 }
 
 .config-group input,
 .config-group select {
   padding: 10px 12px;
-  border: 1px solid #d0d5dd;
+  border: 1px solid #cbd5e1;
   border-radius: 6px;
   font-size: 0.95rem;
   transition: all 0.3s ease;
@@ -214,8 +214,8 @@
 .config-group input:focus,
 .config-group select:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #14b8a6;
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
 }
 
 /* Sessions Section */
@@ -224,14 +224,14 @@
   border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e8eaed;
+  border: 1px solid #e2e8f0;
   width: 100%;
 }
 
 .sessions h2 {
   font-size: 1.3rem;
   font-weight: 600;
-  color: #1a1f36;
+  color: #1e293b;
   margin: 0 0 1.5rem;
 }
 
@@ -244,12 +244,12 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  border-bottom: 1px solid #e8eaed;
+  border-bottom: 1px solid #e2e8f0;
   transition: all 0.3s ease;
 }
 
 .sessions li:hover {
-  background: #f8f9fa;
+  background: #f8fafc;
   border-radius: 6px;
 }
 
@@ -259,16 +259,16 @@
 
 .sessions span {
   font-weight: 500;
-  color: #1a1f36;
+  color: #1e293b;
 }
 
 .sessions small {
-  color: #7a8396;
+  color: #64748b;
   font-size: 0.85rem;
 }
 
 .sessions button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #14b8a6 0%, #0f766e 100%);
   color: white;
   border: none;
   padding: 8px 16px;
@@ -281,22 +281,22 @@
 
 .sessions button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(20, 184, 166, 0.4);
 }
 
 .empty-state {
   text-align: center;
   padding: 2rem;
-  color: #7a8396;
+  color: #64748b;
 }
 
 .loading {
   display: inline-block;
   width: 20px;
   height: 20px;
-  border: 3px solid rgba(102, 126, 234, 0.3);
+  border: 3px solid rgba(20, 184, 166, 0.3);
   border-radius: 50%;
-  border-top-color: #667eea;
+  border-top-color: #14b8a6;
   animation: spin 0.8s linear infinite;
 }
 

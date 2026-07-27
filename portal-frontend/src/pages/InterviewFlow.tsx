@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import interviewService, { InterviewSession, AssignedQuestion } from '../services/interviewService.ts';
+import useInterviewRecording from '../hooks/useInterviewRecording.ts';
+import useSpeechToText from '../hooks/useSpeechToText.ts';
 import '../styles/InterviewFlow.css';
 
 export default function InterviewFlow() {
   const { sessionId } = useParams<{ sessionId: string }>();
   const navigate = useNavigate();
+  const { isRecording, stopAndGetBlob } = useInterviewRecording();
   const [session, setSession] = useState<InterviewSession | null>(null);
   const [answeredIds, setAnsweredIds] = useState<Set<string>>(new Set());
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -14,6 +17,18 @@ export default function InterviewFlow() {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState('');
   const [timeElapsed, setTimeElapsed] = useState(0);
+
+  const appendTranscript = (text: string) => {
+    if (!text) return;
+    setAnswerText((prev) => (prev.trim() ? `${prev.trim()} ${text}` : text));
+  };
+  const {
+    isSupported: speechSupported,
+    isListening,
+    interimTranscript,
+    startListening,
+    stopListening,
+  } = useSpeechToText(appendTranscript);
 
   useEffect(() => {
     loadSession();
@@ -49,11 +64,13 @@ export default function InterviewFlow() {
   };
 
   const goToQuestion = (index: number, questions: AssignedQuestion[], answeredMap: Map<string, string>) => {
+    stopListening();
     setQuestionIndex(index);
     setAnswerText(answeredMap.get(questions[index].id.toString()) || '');
   };
 
   const handleSaveAndNext = async () => {
+    stopListening();
     if (!answerText.trim()) {
       alert('Please provide an answer before continuing');
       return;
@@ -70,6 +87,14 @@ export default function InterviewFlow() {
 
       if (isLastQuestion) {
         await interviewService.submitInterview(session.id);
+        try {
+          const recordingBlob = await stopAndGetBlob();
+          if (recordingBlob) {
+            await interviewService.uploadRecording(session.id, recordingBlob);
+          }
+        } catch (recordingErr) {
+          console.error('Failed to upload interview recording:', recordingErr);
+        }
         navigate(`/results/${session.id}`);
       } else {
         const answeredMap = new Map(session.answers.map((a) => [a.questionId, a.answerText]));
@@ -129,6 +154,12 @@ export default function InterviewFlow() {
           <p className="session-id">Candidate: {session.candidateName}</p>
         </div>
         <div className="header-right">
+          {isRecording && (
+            <div className="recording-indicator">
+              <span className="recording-dot">🔴</span>
+              <span>Recording</span>
+            </div>
+          )}
           <div className="timer">
             <span className="timer-icon">⏱️</span>
             <span>{formatTime(timeElapsed)}</span>
@@ -161,7 +192,18 @@ export default function InterviewFlow() {
             </div>
 
             <div className="answer-section">
-              <label htmlFor="answer">Your Answer:</label>
+              <div className="answer-section-header">
+                <label htmlFor="answer">Your Answer:</label>
+                {speechSupported && (
+                  <button
+                    type="button"
+                    className={`btn-mic ${isListening ? 'listening' : ''}`}
+                    onClick={() => (isListening ? stopListening() : startListening())}
+                  >
+                    {isListening ? '⏹ Stop Dictation' : '🎤 Speak Answer'}
+                  </button>
+                )}
+              </div>
               <textarea
                 id="answer"
                 className="answer-textarea"
@@ -170,6 +212,9 @@ export default function InterviewFlow() {
                 placeholder="Enter your detailed answer here..."
                 rows={8}
               />
+              {isListening && interimTranscript && (
+                <p className="interim-transcript">{interimTranscript}</p>
+              )}
               <div className="input-hint">
                 💡 Tip: Provide a detailed answer including examples, edge cases, and best practices.
               </div>

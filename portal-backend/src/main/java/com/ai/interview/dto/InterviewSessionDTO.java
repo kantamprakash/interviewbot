@@ -22,4 +22,5 @@ public class InterviewSessionDTO {
     private LocalDateTime completedAt;
     private List<AnswerDTO> answers;
     private EvaluationDTO evaluation;
+    private boolean recordingAvailable;
 }

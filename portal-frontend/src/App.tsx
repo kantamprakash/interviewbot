@@ -73,7 +73,7 @@ function AppLayout() {
   if (isAdmin) {
     return (
       <Routes>
-        <Route path="/admin" element={<AdminPanel />} />
+        <Route path="/admin" element={<AdminPanel onLogout={handleLogout} />} />
         <Route path="*" element={<Navigate to="/admin" replace />} />
       </Routes>
     );

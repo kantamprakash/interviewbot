@@ -46,6 +46,8 @@ public class InterviewSession {
 
     private LocalDateTime completedAt;
 
+    private String recordingPath;
+
     @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Answer> answers;
 

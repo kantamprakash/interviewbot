@@ -29,7 +29,11 @@ interface ScheduleForm {
 
 const emptyScheduleForm: ScheduleForm = { candidateId: '', title: '', dueAt: '', questionIds: [] };
 
-export default function AdminPanel() {
+interface AdminPanelProps {
+  onLogout: () => void;
+}
+
+export default function AdminPanel({ onLogout }: AdminPanelProps) {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('interviews');
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -225,7 +229,10 @@ export default function AdminPanel() {
     <div className="admin-panel">
       <header className="admin-header">
         <h1>🔧 Admin Dashboard</h1>
-        <button className="btn-back" onClick={() => navigate('/admin')}>🔄 Refresh</button>
+        <div className="admin-header-actions">
+          <button className="btn-back" onClick={() => navigate('/admin')}>🔄 Refresh</button>
+          <button className="btn-logout" onClick={onLogout}>🚪 Logout</button>
+        </div>
       </header>
 
       <div className="admin-container">
@@ -400,6 +407,16 @@ export default function AdminPanel() {
                             <tr>
                               <td colSpan={7}>
                                 <div className="questions-list">
+                                  {s.recordingAvailable && (
+                                    <div className="recording-playback">
+                                      <p><strong>🎥 Interview Recording</strong></p>
+                                      <video
+                                        controls
+                                        src={interviewService.getRecordingUrl(s.id)}
+                                        style={{ maxWidth: '480px', width: '100%' }}
+                                      />
+                                    </div>
+                                  )}
                                   {s.assignedQuestions.map((q) => {
                                     const answer = s.answers.find(a => a.questionId === q.id.toString());
                                     return (

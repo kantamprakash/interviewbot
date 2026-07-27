@@ -18,8 +18,10 @@ import com.ai.interview.repository.InterviewSessionRepository;
 import com.ai.interview.repository.QuestionRepository;
 import com.ai.interview.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,6 +38,7 @@ public class InterviewService {
     private final EvaluationService evaluationService;
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
+    private final RecordingStorageService recordingStorageService;
 
     public InterviewSessionDTO scheduleInterview(ScheduleInterviewRequest request, Long adminId) {
         User candidate = userRepository.findById(request.getCandidateId())
@@ -165,6 +168,34 @@ public class InterviewService {
         return mapToDTO(session, false);
     }
 
+    public void attachRecording(Long sessionId, Long requesterId, MultipartFile file) {
+        InterviewSession session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new RuntimeException("Session not found"));
+
+        if (!session.getCandidate().getId().equals(requesterId)) {
+            throw new RuntimeException("Access denied");
+        }
+
+        recordingStorageService.save(sessionId, file);
+        session.setRecordingPath("session-" + sessionId + ".webm");
+        sessionRepository.save(session);
+    }
+
+    public UrlResource getRecording(Long sessionId, String requesterRole) {
+        if (!"ADMIN".equals(requesterRole)) {
+            throw new RuntimeException("Access denied: admin role required");
+        }
+
+        InterviewSession session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new RuntimeException("Session not found"));
+        if (session.getRecordingPath() == null) {
+            throw new RuntimeException("No recording available for this session");
+        }
+
+        return recordingStorageService.load(sessionId)
+                .orElseThrow(() -> new RuntimeException("Recording file missing on disk"));
+    }
+
     private InterviewSessionDTO mapToDTO(InterviewSession session, boolean includeScores) {
         InterviewSessionDTO dto = new InterviewSessionDTO();
         dto.setId(session.getId());
@@ -176,6 +207,7 @@ public class InterviewService {
         dto.setDueAt(session.getDueAt());
         dto.setCreatedAt(session.getCreatedAt());
         dto.setCompletedAt(session.getCompletedAt());
+        dto.setRecordingAvailable(session.getRecordingPath() != null);
 
         dto.setAssignedQuestions(session.getAssignedQuestions().stream()
                 .map(q -> new AssignedQuestionDTO(q.getId(), q.getQuestionText(), q.getTopic(), q.getDifficulty()))

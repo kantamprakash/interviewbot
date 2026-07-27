@@ -58,6 +58,7 @@ export interface InterviewSession {
     summary: string;
     evaluatedAt: string;
   } | null;
+  recordingAvailable: boolean;
 }
 
 export { apiClient };
@@ -88,6 +89,24 @@ const interviewService = {
 
   submitInterview: (sessionId: string | number): Promise<InterviewSession> =>
     apiClient.post(`/interviews/${sessionId}/submit`).then(res => res.data),
+
+  uploadRecording: (sessionId: string | number, recording: Blob) => {
+    const formData = new FormData();
+    formData.append('file', recording, `session-${sessionId}.webm`);
+    return apiClient.post(`/interviews/${sessionId}/recording`, formData, {
+      headers: { 'Content-Type': undefined },
+    });
+  },
+
+  getRecordingUrl: (sessionId: string | number): string => {
+    const storedUser = localStorage.getItem('user');
+    const user = storedUser ? JSON.parse(storedUser) : null;
+    const params = new URLSearchParams({
+      userId: user?.id ?? '',
+      role: user?.role ?? '',
+    });
+    return `${API_BASE_URL}/interviews/${sessionId}/recording?${params.toString()}`;
+  },
 
   getCandidates: () => apiClient.get('/users', { params: { role: 'CANDIDATE' } }).then(res => res.data),
 };

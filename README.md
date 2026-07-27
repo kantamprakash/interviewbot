@@ -11,7 +11,7 @@ admins only; candidates just see a submission confirmation.
 | Module | Stack | Port | Purpose |
 |---|---|---|---|
 | `portal-frontend` | React + TypeScript (`react-scripts`) | 3000 | Admin panel + candidate portal UI |
-| `portal-backend` | Spring Boot, H2 (in-memory) | 8301 | Core API: users, questions, interviews, evaluations |
+| `portal-backend` | Spring Boot, H2 (file-based) | 8301 | Core API: users, questions, interviews, evaluations |
 | `ai-service` | Spring Boot + Spring AI (Ollama) | 8302 | LLM-based answer evaluation |
 | `llm-integration` | Java library | — | Shared LLM provider utilities |
 
@@ -86,6 +86,8 @@ Open http://localhost:3000.
   (`X-User-Id` / `X-User-Role`) suitable for local development/demo use, not
   production-grade security — passwords are stored in plaintext in the H2
   database.
-- The H2 database is in-memory (`ddl-auto: create-drop`), so all data resets
-  on every `portal-backend` restart; the question bank is reseeded
-  automatically via `DataInitializer`.
+- The H2 database is file-backed (`portal-backend/data/interviewdb.mv.db`,
+  `ddl-auto: update`), so data survives `portal-backend` restarts. Delete the
+  `data/` directory to reset to a clean state. `DataInitializer` seeds the
+  demo users and question bank only when they don't already exist, so it's
+  safe to run on every startup.
