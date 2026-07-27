@@ -17,6 +17,7 @@ export default function InterviewFlow() {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState('');
   const [timeElapsed, setTimeElapsed] = useState(0);
+  const [tabSwitchCount, setTabSwitchCount] = useState(0);
 
   const appendTranscript = (text: string) => {
     if (!text) return;
@@ -35,6 +36,23 @@ export default function InterviewFlow() {
     const timer = setInterval(() => setTimeElapsed((t) => t + 1), 1000);
     return () => clearInterval(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    let leftTab = false;
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        leftTab = true;
+        setTabSwitchCount((count) => count + 1);
+      } else if (leftTab) {
+        leftTab = false;
+        window.alert(
+          '⚠️ Warning: You switched away from the interview tab. This has been recorded and flagged for the interviewer. Please stay on this tab until you submit your interview.'
+        );
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, []);
 
   const loadSession = async () => {
@@ -167,6 +185,12 @@ export default function InterviewFlow() {
           <button className="btn-exit" onClick={() => navigate('/')}>Exit</button>
         </div>
       </header>
+
+      {tabSwitchCount > 0 && (
+        <div className="tab-switch-banner">
+          ⚠️ Tab switch detected ({tabSwitchCount}). Staying on this tab is required during the interview.
+        </div>
+      )}
 
       <div className="progress-container">
         <div className="progress-info">

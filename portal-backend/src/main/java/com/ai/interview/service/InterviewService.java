@@ -39,6 +39,7 @@ public class InterviewService {
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
     private final RecordingStorageService recordingStorageService;
+    private final EmailService emailService;
 
     public InterviewSessionDTO scheduleInterview(ScheduleInterviewRequest request, Long adminId) {
         User candidate = userRepository.findById(request.getCandidateId())
@@ -56,7 +57,10 @@ public class InterviewService {
         session.setDueAt(request.getDueAt());
         session.setAssignedQuestions(questions);
 
-        return mapToDTO(sessionRepository.save(session), true);
+        InterviewSession saved = sessionRepository.save(session);
+        emailService.sendInterviewScheduledEmail(saved);
+
+        return mapToDTO(saved, true);
     }
 
     public List<InterviewSessionDTO> getSessionsForCandidate(Long candidateId) {
